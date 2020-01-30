@@ -1,0 +1,46 @@
+﻿@model Model.Usuario
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Usuario");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Usuarios";
+    ViewBag.SubTitle = "Importar registros";
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.IndexUrl = Url.Action("Index", "Usuario");
+    ViewBag.FormId = "frmImportUsuario";
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {ViewBag.IndexUrl, @ViewBag.Title},
+        new string[] {"", @ViewBag.SubTitle}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "process,return";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        @using (Html.BeginForm("UploadFile", "Usuario", FormMethod.Post, new { id = ViewBag.FormId, @class = "form-horizontal", ui_jp = "parsley", enctype = "multipart/form-data" }))
+        {
+            <span style="margin-left:10px">Seleccione el archivo desde donde se importarán los datos de los usuarios.</span>
+
+            <div class="row" style="margin:10px">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <input class="btn btn-default" type="file" name="UploadedFile" id="fileLoadDoc" accept=".xlsx" />
+                </div>
+            </div>
+            <div class="row" style="margin:10px">
+                <div class="col-lg-12" style="padding-bottom:36px">
+                    @Html.Partial("UploadFile")
+                </div>
+            </div>
+        }
+    </div>
+</div>

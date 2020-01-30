@@ -1,0 +1,33 @@
+﻿@model List<Model.CentroCostoNivel>
+
+<div class="table-responsive">
+    <table id="tbNiveles" class="table-view-bordered">
+        @if(ViewBag.Niveles != null){
+            <thead>
+                <tr class="ui-widget-header">
+                    <th style="display:none;"></th>
+                    <th class="texto-centrado" style="width:35%">Descripción</th>
+                    <th class="texto-centrado" style="width:15%">Prioridad</th>
+                    <th class="texto-centrado" style="width:35%">Usuario responsable</th>
+                    <th style="width:15%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var item in ViewBag.Niveles)
+                {
+                    <tr>
+                        <td class="id" style="display:none">@item.temporal_id</td>
+                        <td class="des">@item.descripcion</td>
+                        <td id="@item.id" class="texto-centrado"><span class='badge primary'>@item.prioridad </span></td>
+                        <td class="user">@item.Usuario_Nombre</td>
+                        <td class="texto-centrado">
+                            <a class="removebutton" title="Eliminar" href="javascript:void(0);" data-url="centrocosto/DataNiveles" data-id="@item.temporal_id" data-callback="deleteNivelCC"> 
+                                <span class='fa fa-trash-o'></span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>

@@ -1,0 +1,119 @@
+﻿@model Model.Usuario
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Usuario");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Usuarios";
+    ViewBag.SubTitle = (Model.id > 0 ? "Editar Usuario " + Model.id.ToString("D9") : "Nuevo registro");
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.IndexUrl = Url.Action("Index", "Usuario");
+    ViewBag.FormId = "frmUsuario";
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {ViewBag.IndexUrl, @ViewBag.Title},
+        new string[] {"", @ViewBag.SubTitle}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "save,cancel";
+
+    List<Model.Empresa> allEmpresas = ViewBag.Empresas;
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        @using (Html.BeginForm("Guardar", "Usuario", FormMethod.Post, new { id = ViewBag.FormId, @class = "form-horizontal", ui_jp = "parsley" }))
+        {
+            @Html.HiddenFor(u => u.id)
+            <div class="row">
+                <div class="col-md-12"><h5 class="title-form">Información Personal</h5></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="nombre">Nombre completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre completo" value="@Model.nombre" maxlength="300" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="cuentaWeb">Cuenta web</label>
+                    <input type="text" class="form-control" id="cuentaWeb" name="cuentaWeb" placeholder="Cuenta web" value="@Model.cuentaWeb" maxlength="100" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo electrónico" value="@Model.correo" maxlength="100" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="passWeb">Contraseña</label>
+                    <input type="password" class="form-control" id="passWeb" name="passWeb" placeholder="Contraseña" value="@Model.passWeb" maxlength="100" required @(Model.id > 0 ? "readonly" : "")>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label for="codigo_sap">Código SAP</label>
+                    <input type="number" class="form-control" id="codigo_sap" name="codigo_sap" placeholder="Código SAP" value="@Model.codigo_sap" required>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="Rol_id">Rol</label>
+                    @Html.DropDownList("Rol_id", null, null, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="Estado">Estado</label>
+                    @Html.DropDownList("estado", null, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row"><br /></div>
+            <div class="row">
+                <div class="col-md-12"><h5 class="title-form">Empresas</h5></div>
+            </div>
+            <div class="row">
+                @foreach (var item in allEmpresas)
+                {
+                    var elegido = false;
+                    foreach (var u in Model.Empresas)
+                    {
+                        if (item.id == u.id)
+                        {
+                            elegido = true;
+                            break;
+                        }
+                    }
+                    <div class="col-xs-6 col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <input type="checkbox" @(elegido ? "checked" : "") name="empresas_seleccionadas" value="@item.id" />
+                            </span>
+                            <input type="text" class="form-control" value="@item.descripcion" disabled="disabled">
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row"><br /></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="title-form">Centros de costo</h5>
+                    <div style="position: absolute;right: 12px;top: 6px;width: 250px;">
+                        <label style="margin-right:10px;width:25%;">Filtrar</label>
+                        <select id="filtrarCentrosCosto" class="form-control" style="display:inline-block;width:68%;">
+                            <option value="0">Todos</option>
+                            @foreach (var e in ViewBag.Empresas)
+                            {
+                                <option value="@e.id">@e.descripcion</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="centros-costo">
+                @Html.Partial("CentrosCosto", Model)
+            </div>
+        }
+    </div>
+</div>

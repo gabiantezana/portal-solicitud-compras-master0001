@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Menú del sistema";
+}
+
+<script>
+    $(document).ready(function () {
+        CargarItemsMenu();
+    })
+
+    function CargarItemsMenu() {
+        var config = {
+            colNames: ['id', 'Descripción', 'Controlador' , 'Acción', 'Icono', 'Imagen', 'Orden'],
+            colModel: [
+                        {
+                            name: 'id',
+                            index: 'id',
+                            hidden: true
+                        },
+                        {
+                            name: 'descripcion',
+                            index: 'descripcion',
+                            width: 80,
+                            sorttype: 'string',
+                            searchoptions: { sopt: ['eq', 'bw', 'bn', 'cn', 'nc', 'ew', 'en'] },
+                            editable: true,
+                            editrules: { required: true }
+                        },
+                        {
+                            name: 'controllerName',
+                            index: 'controllerName',
+                            width: 50,
+                            searchoptions: { sopt: ['eq', 'bw', 'bn', 'cn', 'nc', 'ew', 'en'] },
+                            editable: true,
+                            editrules: { required: true },
+                            sorttype: 'string'
+                        },
+                        {
+                            name: 'actionName',
+                            index: 'actionName',
+                            width: 50,
+                            searchoptions: { sopt: ['eq', 'bw', 'bn', 'cn', 'nc', 'ew', 'en'] },
+                            editable: true,
+                            editrules: { required: true },
+                            sorttype: 'string'
+                        },
+                        {
+                            name: 'iconName',
+                            index: 'iconName',
+                            width: 50,
+                            editable: true,
+                            searchoptions: { sopt: ['eq', 'bw', 'bn', 'cn', 'nc', 'ew', 'en'] },
+                            sorttype: 'string',
+                            align: "center"
+                        },
+                        {
+                            name: 'iconName',
+                            index: 'iconName',
+                            width: 50,
+                            editable: false,
+                            searchoptions: { sopt: ['eq', 'bw', 'bn', 'cn', 'nc', 'ew', 'en'] },
+                            sorttype: 'string',
+                            formatter: function (cellvalue, options, rowobject) {
+                                return "<i class='" + cellvalue + " fa-lg'></i>";
+                            },
+                            align: "center"
+                        },
+                        {
+                            name: 'orden',
+                            index: 'orden',
+                            width: 20,
+                            searchoptions: { sopt: ['eq', 'bw', 'bn', 'cn', 'nc', 'ew', 'en'] },
+                            editable: true,
+                            sorttype: 'integer',
+                            editrules: { required: true },
+                            align: "center"
+                        }
+            ],
+            caption: "Opciones de menú"
+        };
+
+        jqGridStart('grdMenu', 'pgrMenu', 'menu/GetItemsMenu', config,
+                                          '@Url.Action("GuardarItemMenu", "Menu")',
+                                          '@Url.Action("ActualizarItemMenu", "Menu")',
+                                          '@Url.Action("EliminarItemMenu", "Menu")');
+    }
+
+</script>
+
+<ol class="breadcrumb">
+   <li><a href="~/Home">Inicio</a></li>
+  <li class="active">Menú del sistema</li>
+</ol>
+
+<div class="row">
+
+   <div class="col-md-12">
+        <section class="panel">
+            <header class="panel-heading" style="height:48px">
+                Opciones de menú
+            </header>
+            
+            <div class="panel-body">
+                <div id="products" class="table-responsive">
+                    <table id="grdMenu"></table>
+                    <div id="pgrMenu"></div>
+                </div>  
+
+                <div class="row">
+                    <div class="col-md-8">
+                    </div>
+                    <div class="col-xs-8 col-md-4">
+                        <a href="http://fontawesome.io/icons/" style="float:right; margin-right:10px; margin-top: 8px" target="_blank"> -> Ver íconos disponibles</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+</div>

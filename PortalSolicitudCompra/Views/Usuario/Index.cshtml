@@ -1,0 +1,72 @@
+﻿@model List<Model.Usuario>
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Usuario");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Usuarios";
+    ViewBag.SubTitle = "Lista de registros";
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.FormUrl = Url.Action("Form", "Usuario");
+    ViewBag.ImportUrl = Url.Action("Import", "Usuario");
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {"", @ViewBag.Title}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "new,import";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table ui-jp="dataTable" ui-options="" class="table table-striped table-bordered table-hover table-condensed b-t b-b">
+                <thead>
+                    <tr>
+                        <th style="width:10%">ID</th>
+                        <th style="width:15%">Rol</th>
+                        <th style="width:20%">Nombres</th>
+                        <th style="width:15%">Usuario Web</th>
+                        <th style="width:15%">Fecha registro</th>
+                        <th style="width:10%">Estado</th>
+                        <th style="width:15%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td class="texto-centrado">@("U"+item.id.ToString("D9"))</td>
+                        <td>@item.Rol.descripcion</td>
+                        <td>@item.nombre</td>
+                        <td class="texto-centrado">@item.cuentaWeb</td>
+                        <td class="texto-centrado">@(string.Format("{0:yyyy-MM-dd}", item.fechaRegistro))</td>
+                        <td class="texto-centrado">@(item.estado.Equals("A")?"Activo":"Inactivo")</td>
+                        <td class="texto-centrado column-actions">
+                            @{ 
+                                string[] props = {
+                                    "Usuario", 
+                                    item.id.ToString(), 
+                                    "Details", 
+                                    "Form", 
+                                    "Eliminar", 
+                                    "GET",
+                                    "Eliminar usuario", 
+                                    "¿Está seguro de eliminar este registro?"
+                                };
+                                Html.RenderPartial("_PartButtonsTable", props);
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@{
+    Model.Usuario usuario = (Model.Usuario)Session[Casuarinas.Helpers.Constantes.SESSION_USUARIO];
+    Model.Configuracion config = (Model.Configuracion)Session[Casuarinas.Helpers.Constantes.CONFIGURACION];
+}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>@ViewBag.Title | @config.nombre_empresa</title>
+        <meta name="description" content="Developed By @config.nombre_empresa">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+        <link rel="apple-touch-icon" href="~/Assets/images/logo.png">
+        <meta name="apple-mobile-web-app-title" content="@ViewBag.Title">
+        <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="shortcut icon" sizes="196x196" href="~/Assets/images/logo.png">
+
+        <!-- style -->
+        <link rel="stylesheet" href="~/Assets/animate.css/animate.min.css" type="text/css" />
+        <link rel="stylesheet" href="~/Assets/glyphicons/glyphicons.css" type="text/css" />
+        <link rel="stylesheet" href="~/Assets/font-awesome/css/font-awesome.min.css" type="text/css" />
+        <link rel="stylesheet" href="~/Assets/material-design-icons/material-design-icons.css" type="text/css" />
+        <link rel="stylesheet" href="~/Assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="~/Assets/styles/toastr.css" type="text/css" />
+        <!-- build:css ../assets/styles/app.min.css -->
+        <link rel="stylesheet" href="~/Assets/styles/app.css" type="text/css" />
+        <!-- endbuild -->
+        <link rel="stylesheet" href="~/Assets/styles/font.css" type="text/css" />
+        <link rel="stylesheet" href="~/Assets/styles/custom.css" type="text/css" />
+    </head>
+    <body>
+        <div class="app" id="app">
+            <!-- ############ LAYOUT START-->
+            @{
+                Html.RenderAction("Aside", "Home");
+            }
+            <!-- content -->
+            <div id="content" class="app-content box-shadow-z0" role="main">
+                @{
+                    Html.RenderAction("Header", "Home");
+                }
+                @{
+                    Html.RenderAction("Footer", "Home");
+                }
+                <div ui-view class="app-body" id="view">
+                    <!-- ############ PAGE START-->
+                    <div class="padding">
+                        @RenderBody()
+                    </div>
+                    <!-- ############ PAGE END-->
+                </div>
+            </div>
+            <!-- / -->
+            <!-- ############ LAYOUT END-->
+        </div>
+        <!-- build:js scripts/app.html.js -->
+        <!-- jQuery -->
+        <script src="~/Libs/jquery/jquery/dist/jquery.js"></script>
+        <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <!-- Bootstrap -->
+        <script src="~/Libs/jquery/tether/dist/js/tether.min.js"></script>
+        <script src="~/Libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+        <!-- core -->
+        <script src="~/Libs/jquery/underscore/underscore-min.js"></script>
+        <script src="~/Libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js"></script>
+        <script src="~/Libs/jquery/PACE/pace.min.js"></script>
+        <script src="~/Scripts/config.lazyload.js"></script>
+        <script src="~/Scripts/palette.js"></script>
+        <script src="~/Scripts/ui-load.js"></script>
+        <script src="~/Scripts/ui-jp.js"></script>
+        <script src="~/Scripts/ui-include.js"></script>
+        <script src="~/Scripts/ui-device.js"></script>
+        <script src="~/Scripts/ui-form.js"></script>
+        <script src="~/Scripts/ui-nav.js"></script>
+        <script src="~/Scripts/ui-screenfull.js"></script>
+        <script src="~/Scripts/ui-scroll-to.js"></script>
+        <script src="~/Scripts/ui-toggle-class.js"></script>
+        <script src="~/Scripts/plugins/toastr.js"></script>
+        <script src="~/Scripts/plugins/bootbox.min.js"></script>
+        <script src="~/Scripts/app.js"></script>
+        <!-- ajax -->
+        <script src="~/Libs/jquery/jquery-pjax/jquery.pjax.js"></script>
+        <script src="~/Scripts/ajax.js"></script>
+        <!-- endbuild -->
+        @{ Html.RenderPartial("_PartToastr"); }
+    </body>
+</html>

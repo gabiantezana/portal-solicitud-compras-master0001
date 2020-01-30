@@ -1,0 +1,159 @@
+﻿@model Model.CentroCosto
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("CentroCosto");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Centros de costo";
+    ViewBag.SubTitle = (Model.id > 0 ? "Editar Centro de costo " + Model.id.ToString("D9") : "Nuevo registro");
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.IndexUrl = Url.Action("Index", "CentroCosto");
+    ViewBag.FormId = "frmCentroCosto";
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {ViewBag.IndexUrl, @ViewBag.Title},
+        new string[] {"", @ViewBag.SubTitle}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "save,cancel";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        @using (Html.BeginForm("Guardar", "CentroCosto", FormMethod.Post, new { id = ViewBag.FormId, @class = "form-horizontal", ui_jp = "parsley" }))
+        {
+            @Html.HiddenFor(c => c.id)
+            @Html.HiddenFor(c => c.descripcion)
+            @Html.HiddenFor(c => c.Empresa_id)
+            @Html.HiddenFor(c => c.codigoSap)
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="descripcion">Descripción</label>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" value="@Model.descripcion" maxlength="300" disabled />
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="empresa">Empresa</label>
+                    <input type="text" class="form-control" id="empresa" name="empresa" value="@Model.Empresa.descripcion" maxlength="300" disabled />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="codigoSap">Código SAP</label>
+                    <input type="text" class="form-control" id="codigoSap" name="codigoSap" value="@Model.codigoSap" maxlength="10" disabled>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="estado">Estado</label>
+                    <select id="estado" name="estado" class="form-control">
+                        <option value="A" @(Model.estado == "A" ? "selected" : "")> Activo </option>
+                        <option value="I" @(Model.estado == "I" ? "selected" : "")> Inactivo </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row"><br /></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="title-form">Niveles de aprobación</h5>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:12px">
+                <div class="col-md-4 col-xs-1"> </div>
+                <div class="col-md-2 col-xs-18">
+                    <button type="button" class="btn primary" title="Agregar nivel" data-toggle="modal" data-target="#createLevel" ui-toggle-class="zoom">
+                        <span class="fa fa-plus-circle"></span> Agregar nivel
+                    </button>
+                </div>
+                <div class="col-md-3 col-xs-18">
+                    <button type="button" class="btn accent" title="Modificar prioridad" data-toggle="modal" data-target="#priorityLevel" ui-toggle-class="zoom">
+                        <span class="fa fa-sort"></span> Modificar prioridad
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"> </div>
+                <div class="col-md-6">
+                    <div id="cc-niveles">
+                        @Html.Partial("DataNiveles", Model.CentroCostoNivel)
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div id="createLevel" class="modal black-overlay fade animate" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Asignar nivel de aprobación</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center p-lg">
+                <form action="#" role="form">
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="niv_des">Descripción</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="niv_des" name="niv_des" maxlength="300" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="niv_usu">Usuario responsable</label>
+                        <div class="col-md-8">
+                            <select class="form-control" id="niv_usu" name="niv_usu">
+                                <option value="">Seleccione uno...</option>
+                                @{
+                                    foreach (var item in ViewBag.Usuarios)
+                                    {
+                                        <option value="@item.id">@item.nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success p-x-md btn-md" id="btnAddLevelAuth">
+                    <i class="fa fa-check"></i> Agregar
+                </button>
+                <button type="button" class="btn btn-warning p-x-md btn-md" data-dismiss="modal">
+                    <i class="fa fa-remove"></i> Cancelar
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<div id="priorityLevel" class="modal black-overlay fade animate" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modificar prioridad</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center p-lg">
+                <form action="#" role="form">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <ul id="ulSortable" class="list-group list-group-sortable indigo-50"></ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success p-x-md btn-md" id="btnModifyPriority">
+                    <i class="fa fa-check"></i> Modificar
+                </button>
+                <button type="button" class="btn btn-warning p-x-md btn-md" data-dismiss="modal">
+                    <i class="fa fa-remove"></i> Cancelar
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>

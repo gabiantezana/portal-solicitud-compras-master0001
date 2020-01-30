@@ -1,0 +1,186 @@
+.indigo-900 {
+    background-color: #ff8000;
+}
+
+.primary {
+    background-color: #ff8000;
+}
+
+.text-primary, .text-primary-hover a:hover {
+    color: #ff8000 !important;
+}
+
+.md-input:focus, .md-input.focus {
+    border-color: #ff8000;
+}
+
+    .md-input:focus ~ label, .md-input.focus ~ label {
+        color: #ff8000;
+    }
+
+.background-login, .background-cambio {
+    background-size: cover !important;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    /*opacity: 0.1;*/
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 10s;
+    animation-direction: alternate;
+}
+
+.background-login {
+    background: url(/Assets/images/fondo-pantalla-login.jpg) no-repeat;
+    animation-name: cFadeLogin;
+}
+
+.background-cambio {
+    background: url(/Assets/images/fondo-pantalla-cambio.jpg) no-repeat;
+    animation-name: cFadeCambio;
+}
+
+#app {
+    position: relative;
+}
+
+.m-b {
+    text-align: center;
+}
+
+.parsley-errors-list {
+    color: red;
+    margin: 6px 0 0 !important;
+}
+
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 15px;
+}
+
+    .lds-ellipsis div {
+        position: absolute;
+        top: 5px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #fff;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+
+        .lds-ellipsis div:nth-child(1) {
+            left: 6px;
+            animation: lds-ellipsis1 0.6s infinite;
+        }
+
+        .lds-ellipsis div:nth-child(2) {
+            left: 6px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+
+        .lds-ellipsis div:nth-child(3) {
+            left: 26px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+
+        .lds-ellipsis div:nth-child(4) {
+            left: 45px;
+            animation: lds-ellipsis3 0.6s infinite;
+        }
+
+.bs-callout-warning {
+    color: #f44455;
+}
+
+.bs-callout-info {
+    color: #5bc0de;
+}
+
+.md-form-group {
+    padding: 18px 0;
+}
+
+@keyframes cFadeCambio {
+
+    0% {
+        opacity: 0.1;
+    }
+
+
+    45% {
+        opacity: 0.1;
+    }
+
+
+    55% {
+        opacity: 0;
+    }
+
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes cFadeLogin {
+
+    0% {
+        opacity: 0;
+    }
+
+
+    45% {
+        opacity: 0;
+    }
+
+
+    55% {
+        opacity: 0.1;
+    }
+
+
+    100% {
+        opacity: 0.1;
+    }
+}
+
+@keyframes lds-ellipsis1 {
+
+    0% {
+        transform: scale(0);
+    }
+
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+@keyframes lds-ellipsis3 {
+
+    0% {
+        transform: scale(1);
+    }
+
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+
+@keyframes lds-ellipsis2 {
+
+    0% {
+        transform: translate(0, 0);
+    }
+
+
+    100% {
+        transform: translate(19px, 0);
+    }
+}

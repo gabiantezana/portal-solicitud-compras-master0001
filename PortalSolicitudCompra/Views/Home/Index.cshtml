@@ -1,0 +1,113 @@
+﻿@{
+    Model.Usuario usuario = (Model.Usuario)Session[Casuarinas.Helpers.Constantes.SESSION_USUARIO];
+    Model.Configuracion config = (Model.Configuracion)Session[Casuarinas.Helpers.Constantes.CONFIGURACION];
+    ViewBag.Title = "Inicio";
+}
+
+<div class="margin">
+    <h5 class="mb-0 _300">Hola @usuario.nombre, Bienvenido al sistema</h5>
+    <small class="text-muted">@config.nombre_empresa | Versión: @Casuarinas.Helpers.Constantes.SISTEMA_VERSION</small>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-5 col-lg-4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row no-gutter box-color text-center primary">
+                    <div class="col-sm-12 p-a dker">
+                        <h4 class="m-0 text-md _600"><a>Solicitudes en la Web</a></h4>
+                        @ViewBag.TotalSOL Solicitude(s)
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box p-a">
+                    <div class="pull-left m-r">
+                        <i class="fa fa-paperclip text-2x text-danger m-y-sm"></i>
+                    </div>
+                    <div class="clear">
+                        <div class="text-muted">Solicitudes Pendientes</div>
+                        <h4 class="m-0 text-md _600"><a>@ViewBag.TotalSPE</a></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box p-a">
+                    <div class="pull-left m-r">
+                        <i class="fa fa-refresh text-2x text-info m-y-sm"></i>
+                    </div>
+                    <div class="clear">
+                        <div class="text-muted">Solicitudes en proceso</div>
+                        <h4 class="m-0 text-md _600"><a>@ViewBag.TotalSEP</a></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box p-a">
+                    <div class="pull-left m-r">
+                        <i class="fa fa-check-square-o text-2x text-accent m-y-sm"></i>
+                    </div>
+                    <div class="clear">
+                        <div class="text-muted">Solicitudes Aprobadas</div>
+                        <h4 class="m-0 text-md _600"><a>@ViewBag.TotalSAP</a></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box p-a">
+                    <div class="pull-left m-r">
+                        <i class="fa fa-times text-2x text-success m-y-sm"></i>
+                    </div>
+                    <div class="clear">
+                        <div class="text-muted">Solicitudes Rechazadas</div>
+                        <h4 class="m-0 text-md _600"><a>@ViewBag.TotalSRE</a></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-5 col-lg-4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row no-gutter box-color text-center primary">
+                    <div class="col-sm-12 p-a dker">
+                        <h4 class="m-0 text-md _600"><a>Solicitudes en SAP</a></h4>
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box p-a">
+                    <div class="pull-left m-r">
+                        <i class="fa fa-download text-2x text-danger m-y-sm"></i>
+                    </div>
+                    <div class="clear">
+                        <div class="text-muted">Solicitudes de compra</div>
+                        <h4 class="m-0 text-md _600"><a>@ViewBag.TotalSAP_PR</a></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box p-a">
+                    <div class="pull-left m-r">
+                        <i class="fa fa-shopping-cart text-2x text-info m-y-sm"></i>
+                    </div>
+                    <div class="clear">
+                        <div class="text-muted">Ordenes de compra</div>
+                        <h4 class="m-0 text-md _600"><a>@ViewBag.TotalSAP_PO</a></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box p-a">
+                    <div class="pull-left m-r">
+                        <i class="fa fa-thumbs-up text-2x text-accent m-y-sm"></i>
+                    </div>
+                    <div class="clear">
+                        <div class="text-muted">Ingresos a almacen</div>
+                        <h4 class="m-0 text-md _600"><a>@ViewBag.TotalSAP_DN</a></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+﻿@model Model.Rol
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Rol");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Roles";
+    ViewBag.SubTitle = (Model.id > 0 ? "Editar Rol " + Model.id.ToString("D9") : "Nuevo registro");
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.IndexUrl = Url.Action("Index", "Rol");
+    ViewBag.FormId = "frmRol";
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {ViewBag.IndexUrl, @ViewBag.Title}, 
+        new string[] {"", @ViewBag.SubTitle}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "save,cancel";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        @using (Html.BeginForm("Guardar", "Rol", FormMethod.Post, new { id = ViewBag.FormId, @class = "form-horizontal", ui_jp = "parsley" }))
+        {
+            @Html.HiddenFor(u => u.id)
+            <div class="form-group">
+                <label for="descripcion">Descripción</label>
+                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción" value="@Model.descripcion" maxlength="300" required>
+            </div>
+            <div class="table-responsive">
+                <label for="" style="margin-bottom:0;">Permisos</label>
+                <table ui-jp="dataTable" ui-options="" class="table table-striped table-bordered table-hover table-condensed b-t b-b" data-searching="false" data-paging="false">
+                    <thead>
+                        <tr>
+                            <th style="width:0%; display:none;">Id</th>
+                            <th style="width:10%">Item</th>
+                            <th style="width:20%">Opción de Menú</th>
+                            <th style="width:10%">Asignado</th>
+                            <th style="width:60%">Permisos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.MenuRol)
+                        {
+                            <tr class="orden-@item.Menu_id">
+                                <td style="display:none" class="cbx-id-td"><input type="hidden" name="menu_id" class="cbx-id" value="@item.Menu_id" /></td>
+                                <td class="texto-centrado">@item.Menu_orden</td>
+                                <td>@item.Menu_descripcion</td>
+                                <td class="texto-centrado cbx-accesa-td">
+                                    <div class="checkbox">
+                                        <input name="mxro_accesa" value="@(item.accesa? "1": "0")" @(item.accesa ? "checked" : "") class="cbx-accesa cbx-event-main" type="checkbox" data-toggle="checkbox-x" data-three-state="false" data-parent=".orden-@item.Menu_id" data-childs=".row_permisos">
+                                        <label>Accesa</label>
+                                    </div>
+                                </td>
+                                <td class="td-visible texto-centrado">
+                                    <div class="checkbox">
+                                        <input name="mxro_registra" value="@(item.registra? "1":"0")" @(item.registra ? "checked" : "") class="cbx-registra row_permisos" type="checkbox" data-toggle="checkbox-x" data-three-state="false">
+                                        <label>Registra</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input name="mxro_modifica" value="@(item.modifica? "1":"0")" @(item.modifica ? "checked" : "") class="cbx-modifica row_permisos" type="checkbox" data-toggle="checkbox-x" data-three-state="false">
+                                        <label>Modifica</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input name="mxro_consulta" value="@(item.consulta? "1":"0")" @(item.consulta ? "checked" : "") class="cbx-consulta row_permisos" type="checkbox" data-toggle="checkbox-x" data-three-state="false">
+                                        <label>Consulta</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input name="mxro_elimina" value="@(item.elimina? "1":"0")" @(item.elimina ? "checked" : "") class="cbx-elimina row_permisos" type="checkbox" data-toggle="checkbox-x" data-three-state="false">
+                                        <label>Elimina</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input name="mxro_imprime" value="@(item.imprime? "1":"0")" @(item.imprime ? "checked" : "") class="cbx-imprime row_permisos" type="checkbox" data-toggle="checkbox-x" data-three-state="false">
+                                        <label>Imprime</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input name="mxro_exporta" value="@(item.exporta? "1":"0")" @(item.exporta ? "checked" : "") class="cbx-exporta row_permisos" type="checkbox" data-toggle="checkbox-x" data-three-state="false">
+                                        <label>Exporta</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

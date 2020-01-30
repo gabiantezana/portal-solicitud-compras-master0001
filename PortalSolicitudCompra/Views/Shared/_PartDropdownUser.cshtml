@@ -1,0 +1,19 @@
+﻿@{
+    Model.Usuario usuario = (Model.Usuario)Session[Casuarinas.Helpers.Constantes.SESSION_USUARIO];
+}
+<div class="dropdown-menu dropdown-menu-overlay pull-right">
+    <a class="dropdown-item" href="@Url.Action("index", "Perfil")">
+        <span>@Casuarinas.Helpers.Strings_ES.MASTER_NAV_ACCOUNT_SUB_MENU_PROFILE</span>
+    </a>
+    @if (usuario != null && usuario.cuentaWeb.Equals("manager"))
+    {
+        <a class="dropdown-item" href="@Url.Action("index", "Menu")">
+            <span>@Casuarinas.Helpers.Strings_ES.MASTER_NAV_ACCOUNT_SUB_MENU_OPCIONMENU</span>
+        </a>
+    }
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" ui-sref="app.docs">
+        Necesita ayuda?
+    </a>
+    <a class="dropdown-item" href="@Url.Action("logout", "Autentificacion")">@Casuarinas.Helpers.Strings_ES.MASTER_NAV_ACCOUNT_SUB_MENU_LOGOUT</a>
+</div>

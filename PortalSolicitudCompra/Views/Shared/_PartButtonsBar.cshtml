@@ -1,0 +1,68 @@
+﻿@*
+    ViewBag.AuthRequest => "new,edit,save,cancel,return,import,approve,refuse";
+    ViewBag.ImportUrl   => Url de importacion
+    ViewBag.FormUrl     => Url de formulario
+    ViewBag.IndexUrl    => Url de inicio
+    ViewBag.FormId      => Id de formulario a guardar
+*@
+@{
+    var permisos = Model;
+    var authRequest = ViewBag.AuthRequest;
+}
+
+    <div class="buttons-action">
+        @if (authRequest.IndexOf("import") != -1 && permisos != null && permisos.registra == true)
+        {
+            <a class="btn btn-small btn-md accent" href="@ViewBag.ImportUrl" title="Importar Registros">
+                <span class="nav-icon"><i class="material-icons">file_upload</i></span> Importar
+            </a>
+        }
+        @if (authRequest.IndexOf("approve") != -1 && permisos != null && permisos.accesa == true)
+        {
+            <a class="btn btn-small btn-md teal-500" href="javascript:void(0);" title="Aprobar Solicitudes" id="btnAprobarSolicitudes">
+                <span class="nav-icon"><i class="material-icons">check_circle</i></span> Aprobar
+            </a>
+        }
+        @if (authRequest.IndexOf("refuse") != -1 && permisos != null && permisos.accesa == true)
+        {
+            <a class="btn btn-small btn-md red-800" href="javascript:void(0);" title="Rechazar Solicitudes" id="btnRechazarSolicitudes">
+                <span class="nav-icon"><i class="material-icons">cancel</i></span> Rechazar
+            </a>
+        }
+        @if (authRequest.IndexOf("new") != -1 && permisos != null && permisos.registra == true)
+        {
+            <a class="btn btn-small btn-md btn-info" href="@ViewBag.FormUrl" title="Nuevo Registro">
+                <span class="nav-icon"><i class="material-icons">library_add</i></span> Nuevo
+            </a>
+        }
+        @if (authRequest.IndexOf("edit") != -1 && permisos != null && permisos.modifica == true)
+        {
+            <a class="btn btn-small btn-md btn-info" href="@ViewBag.FormUrl" title="Editar Registro">
+                <span class="nav-icon"><i class="material-icons">edit</i></span> Editar
+            </a>
+        }
+        @if (authRequest.IndexOf("save") != -1 && permisos != null && (permisos.registra == true || permisos.modifica == true))
+        {
+            <button class="btn btn-small btn-md btn-primary btn-save-form-main" type="button" title="Guardar Registro" data-form="@ViewBag.FormId">
+                <span class="nav-icon"><i class="material-icons">save</i></span> Guardar
+            </button>
+        }
+        @if (authRequest.IndexOf("process") != -1 && permisos != null && permisos.registra == true)
+        {
+            <button class="btn btn-small btn-md btn-primary btn-save-form-main" type="button" title="Guardar Registro" data-form="@ViewBag.FormId">
+                <span class="nav-icon"><i class="material-icons">cached</i></span> Procesar
+            </button>
+        }
+        @if (authRequest.IndexOf("cancel") != -1 && permisos != null && permisos.accesa == true)
+        {
+            <a class="btn btn-small btn-md btn-warning" href="@ViewBag.IndexUrl" title="Cancelar">
+                <span class="nav-icon"><i class="material-icons">clear</i></span> Cancelar
+            </a>
+        }
+        @if (authRequest.IndexOf("return") != -1 && permisos != null && permisos.accesa == true)
+        {
+            <a class="btn btn-small btn-md btn-warning" href="@ViewBag.IndexUrl" title="Regresar">
+                <span class="nav-icon"><i class="material-icons">reply</i></span> Regresar
+            </a>
+        }
+    </div>

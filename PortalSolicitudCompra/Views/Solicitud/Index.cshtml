@@ -1,0 +1,106 @@
+﻿@model List<Model.Solicitud>
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Solicitud");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Mis solicitudes";
+    ViewBag.SubTitle = "Lista de registros";
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.FormUrl = Url.Action("Form", "Solicitud");
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {"", @ViewBag.Title}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "new";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table ui-jp="dataTable" ui-options="" class="table table-striped table-bordered table-hover table-condensed b-t b-b table-solicitud-action">
+                <thead>
+                    <tr>
+                        <th style="width:10%">ID</th>
+                        <th style="width:17%">Empresa</th>
+                        <th style="width:17%">Centro de costo</th>
+                        <th style="width:10%">F.Registro</th>
+                        <th style="width:10%">F.Necesaria</th>
+                        <th style="width:5%">Items</th>
+                        <th style="width:8%">Modificado</th>
+                        <th style="width:8%">Estado</th>
+                        <th style="width:15%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var estado = "";
+                        var color = "black";
+                        if (item.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.INICIAL_REGISTRADA))
+                        {
+                            estado = "Pendiente";
+                            color = "#F42A04";
+                        }else if (item.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.PROCESANDO))
+                        {
+                            estado = "Procesando";
+                        }else if (item.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.APROBADA))
+                        {
+                            estado = "Aprobada";
+                            color = "#5cb85c";
+                        }else if (item.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.RECHAZADA))
+                        {
+                            estado = "Rechazada";
+                            color = "#F42A04";
+                        }else if (item.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.RegistradaEnSAP))
+                        {
+                            estado = "En SAP (Solicitud)";
+                            color = "#5bc0de";
+                        }else if (item.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.OrdenDeCompra))
+                        {
+                            estado = "En SAP (Orden Compra)";
+                            color = "#428bca";
+                        }else if (item.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.IngresoAlmacen))
+                        {
+                            estado = "En SAP (Almacén)";
+                            color = "#5cb85c";
+                        }
+                    <tr>
+                        <td class="texto-centrado">@("MS" + item.id.ToString("D9"))</td>
+                        <td>@item.Empresa_descripcion</td>
+                        <td>@item.CentroCosto_descripcion</td>
+                        <td class="texto-centrado">@(string.Format("{0:yyyy-MM-dd}", item.fechaRegistro))</td>
+                        <td class="texto-centrado">@(string.Format("{0:yyyy-MM-dd}", item.fechaNecesaria))</td>
+                        <td class="texto-centrado">@item.cantidadItems</td>
+                        <td class="texto-centrado">@(item.Modificado ? "SI" : "NO")</td>
+                        <td class="texto-centrado estado-solicitud" style="color:@color">@estado</td>
+                        <td class="texto-centrado column-actions">
+                            @{
+                                string[] props = {
+                                    "Solicitud",
+                                    item.id.ToString(),
+                                    "Details",
+                                    "Form",
+                                    "Eliminar",
+                                    "GET",
+                                    "Eliminar solicitud",
+                                    "¿Está seguro de eliminar este registro?"
+                                };
+                                Html.RenderPartial("_PartButtonsTable", props);
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

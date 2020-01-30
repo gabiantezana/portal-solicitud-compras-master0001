@@ -1,0 +1,24 @@
+﻿<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        @foreach (var bread in ViewBag.BreadCrumb)
+        {
+            String classActive = "";
+            String attrActive = "";
+            if (string.IsNullOrEmpty(bread[0]))
+            {
+                classActive = "active";
+                attrActive = "aria-current=page";
+            }
+            <li class="breadcrumb-item @classActive " @attrActive>
+                @if (string.IsNullOrEmpty(bread[0]))
+                {
+                    @bread[1];
+                }
+                else
+                {
+                    <a href="@bread[0]">@bread[1]</a>
+                }
+            </li>
+        }
+    </ol>
+</nav>

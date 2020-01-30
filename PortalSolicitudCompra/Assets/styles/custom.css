@@ -1,0 +1,322 @@
+.indigo-900 {
+    background-color: #ff8000;
+}
+
+.primary {
+    background-color: #cc6600;
+}
+
+.text-primary, .text-primary-hover a:hover {
+    color: #cc6600 !important;
+}
+
+.nav-active-primary .nav-link.active, .nav-active-primary .nav > li.active > a {
+    background-color: #ff8c00 !important;
+}
+
+.navside .nav li a.active {
+    background-color: rgba(0, 0, 0, 0.065);
+}
+
+.folded.nav-expand:hover, .folded.nav-expand:hover .scroll, .folded.nav-expand:focus, .folded.nav-expand:focus .scroll, .folded.nav-expand.active, .folded.nav-expand.active .scroll {
+    width: 14.5rem !important;
+}
+
+table.dataTable thead th,
+.texto-centrado {
+    text-align: center;
+}
+
+/*
+
+.table > tbody > tr > td.column-actions {
+
+    padding-top: 8px;
+
+    padding-bottom: 8px;
+
+}
+
+*/
+
+.table > tbody > tr > td.column-actions .nav-icon {
+    margin-right: 0;
+    min-width: 0;
+}
+
+nav[aria-label="breadcrumb"] {
+    box-shadow: 0 0px 1px rgba(0, 0, 0, 0.15);
+}
+
+.breadcrumb {
+    background-color: #fff;
+    border-radius: 0;
+    font-size: 0.805rem;
+    padding: .35rem 1rem;
+    margin-bottom: .5rem;
+}
+
+    .breadcrumb a:hover {
+        color: #0cc2aa;
+    }
+
+table div.checkbox {
+    display: inline-block;
+    padding-left: 10px;
+}
+
+    table div.checkbox input {
+        display: inline-flex;
+        vertical-align: middle;
+        margin-right: 3px;
+    }
+
+    table div.checkbox label {
+        display: inline-flex;
+        vertical-align: middle;
+    }
+
+.form-control {
+    font-size: 0.875rem;
+}
+
+.buttons-action {
+    position: absolute;
+    right: 16px;
+    top: 17px;
+}
+
+    .buttons-action .btn {
+        font-size: 1rem;
+    }
+
+        .buttons-action .btn .nav-icon {
+            margin-right: 3px;
+        }
+
+    .buttons-action .btn-primary,
+    .buttons-action-custom .btn-primary {
+        background-color: #cc6600;
+        border-color: #cc6600;
+    }
+
+.btn-info {
+    background-color: #0cc2aa;
+    border-color: #0cc2aa;
+}
+
+    .btn-info:hover {
+        background-color: #0b9986;
+        border-color: #0b9986;
+    }
+
+.buttons-action .btn {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.parsley-errors-list .parsley-required,
+.parsley-errors-list .parsley-type {
+    color: #ff0000;
+}
+
+.button-navbar-switch a {
+    width: 40px;
+    height: 35px;
+    display: block;
+    margin-bottom: 0;
+    text-align: center;
+    padding: 8px 10px;
+}
+
+.text-color.color-indigo {
+    color: #ff8000;
+}
+
+.navbar .avatar {
+    top: -1px;
+}
+
+.box-body form {
+    margin-bottom: 50px;
+}
+
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 15px;
+}
+
+.modal .lds-ellipsis {
+    height: 14px;
+}
+
+.lds-ellipsis div {
+    position: absolute;
+    top: 5px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.modal .lds-ellipsis div {
+    top: 3px;
+}
+
+.lds-ellipsis div:nth-child(1) {
+    left: 6px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+    left: 6px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+    left: 26px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+    left: 45px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+
+.bootbox.modal button.close {
+    margin-top: 0 !important;
+}
+
+.bootbox.bootbox-confirm .bootbox-close-button,
+.bootbox.bootbox-prompt .bootbox-close-button {
+    float: right;
+    position: absolute;
+    right: 15px;
+}
+
+.bootbox.bootbox-confirm button {
+    cursor: pointer;
+}
+
+.form-group.form-margin-center {
+    margin: 25px auto;
+}
+
+table.table-view-bordered {
+    width: 100%;
+}
+
+    table.table-view-bordered td,
+    table.table-view-bordered th {
+        border: 1px solid #cdcdcd;
+        padding: 2px 5px;
+    }
+
+    table.table-view-bordered.table-view td {
+        padding: 6px 12px;
+        width: 50%;
+    }
+
+    table.table-view-bordered .dl-horizontal,
+    table.table-view-bordered dt,
+    table.table-view-bordered dd {
+        margin-bottom: 0;
+    }
+
+h5.title-form {
+    margin: 10px 0 20px;
+}
+
+.btn, .removebutton, .editbutton {
+    cursor: pointer;
+}
+
+    .removebutton:hover {
+        color: #f44455;
+    }
+
+    .editbutton:hover {
+        color: #f0ad4e;
+    }
+
+    .btn.primary:hover {
+        background-color: #0b9986;
+        border-color: #0b9986;
+    }
+
+    .btn.accent:hover {
+        background-color: #856ab5;
+        border-color: #856ab5;
+    }
+
+.list-group-item {
+    padding: 8px 16px;
+}
+
+    .list-group-item:hover {
+        cursor: pointer;
+        box-shadow: inset 0 -10rem 0px rgba(158, 158, 158, 0.2);
+    }
+
+#btnAprobarSolicitudes .material-icons,
+#btnRechazarSolicitudes .material-icons {
+    font-size: 16px;
+    position: relative;
+    top: -1px;
+}
+
+
+@keyframes lds-ellipsis1 {
+
+    0% {
+        transform: scale(0);
+    }
+
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes lds-ellipsis3 {
+
+    0% {
+        transform: scale(1);
+    }
+
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@keyframes lds-ellipsis2 {
+
+    0% {
+        transform: translate(0, 0);
+    }
+
+
+    100% {
+        transform: translate(19px, 0);
+    }
+}
+
+
+@media(min-width: 992px) {
+
+    .app-aside, .app-aside .scroll {
+        width: 14.5rem;
+    }
+
+        .app-aside:not(.hide) ~ .app-content {
+            margin-left: 14.5rem;
+        }
+
+    .folded.nav-expand:hover > *, .folded.nav-expand:focus > *, .folded.nav-expand.active > * {
+        width: 14.5rem;
+    }
+}

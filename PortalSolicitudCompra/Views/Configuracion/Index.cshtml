@@ -1,0 +1,87 @@
+﻿@model Model.Configuracion
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Configuracion");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Configuración";
+    ViewBag.SubTitle = "General";
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.FormId = "frmConfiguracion";
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {"", @ViewBag.Title}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "save";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        @using (Html.BeginForm("Guardar", "Configuracion", FormMethod.Post, new { id = ViewBag.FormId, @class = "form-horizontal", ui_jp = "parsley", enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(c => c.id)
+            <div class="row">
+                <div class="col-md-6"><h5 class="title-form">Configuración general</h5></div>
+                <div class="col-md-6"><h5 class="title-form">Servidor de correo</h5></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="nombre_empresa">Descripción</label>
+                    <input type="text" class="form-control" id="nombre_empresa" name="nombre_empresa" placeholder="Descripción" value="@Model.nombre_empresa" maxlength="300" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="servidor_correo">Host</label>
+                    <input type="text" class="form-control" id="servidor_correo" name="servidor_correo" placeholder="Host" value="@Model.servidor_correo" maxlength="300" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="logo_url">Logo</label>
+                    <input type="file" class="form-control" id="logo_url" name="logo_url">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="puerto">Puerto</label>
+                    <input type="number" class="form-control" id="puerto" name="puerto" placeholder="587" value="@Model.puerto" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="">Versión</label>
+                    <input type="text" class="form-control" value="@Casuarinas.Helpers.Constantes.SISTEMA_VERSION" disabled>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario" value="@Model.usuario" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="">Contacto</label>
+                    <a class="form-control" disabled target="_blank" href="http://@Casuarinas.Helpers.Constantes.SISTEMA_CONTWEB">@Casuarinas.Helpers.Constantes.SISTEMA_CONTWEB</a>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" value="@Model.password" required>
+                </div>
+            </div>
+            <div class="row hide">
+                <div class="col-sm-6 form-group">
+                    <label for="enviar_correos">Enviar email</label>
+                    <input type="checkbox" class="" id="enviar_correos" name="enviar_correos" @(Model.enviar_correos ? "checked" : "") value="true">
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label for="push_notification">Mensajes instantáneos</label>
+                    <input type="checkbox" class="" id="push_notification" name="push_notification" @(Model.push_notification ? "checked" : "") value="true">
+                </div>
+            </div>
+        }
+    </div>
+</div>

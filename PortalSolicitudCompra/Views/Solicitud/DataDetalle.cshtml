@@ -1,0 +1,63 @@
+﻿@model List<Model.SolicitudDetalle>
+
+<div class="table-responsive">
+    <table id="tbNiveles" class="table-view-bordered">
+        @if (ViewBag.Detalles != null)
+        {
+            <thead>
+                <tr class="ui-widget-header">
+                    <th style="display:none;">Id</th>
+                    <th class="texto-centrado" style="width:10%">Código SAP</th>
+                    <th class="texto-centrado" style="width:30%">Artículo/Servicio</th>
+                    <th class="texto-centrado" style="width:10%">Unidad de medida</th>
+                    <th class="texto-centrado" style="width:10%; display:none">Id Almacén</th>
+                    <th class="texto-centrado" style="width:10%">Almacén</th>
+                    <th class="texto-centrado" style="width:10%; display:none">Id Proyecto</th>
+                    <th class="texto-centrado" style="width:10%">Proyecto</th>
+                    <th class="texto-centrado" style="width:10%; display:none">Sede Id</th>
+                    <th class="texto-centrado" style="width:10%">Sede nombre</th>
+                    <th class="texto-centrado" style="width:10%; display:none">Centro costo id</th>
+                    <th class="texto-centrado" style="width:10%">Centro costo nombre</th>
+                    <th class="texto-centrado" style="width:10%; display:none">Dimension costo id</th>
+                    <th class="texto-centrado" style="width:10%">Dimension costo nombre</th>
+                    <th class="texto-centrado" style="width:10%">Fecha nec.</th>
+                    <th class="texto-centrado" style="width:12%">Cant. nec.</th>
+                    <th class="texto-centrado" style="width:28%">Comentario</th>
+                    <th style="width:10%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Detalles)
+                {
+                <tr>
+                    <td class="id" style="display:none">@item.temporal_id</td>
+                    <td class="csap texto-centrado">@item.Articulo_codigosap</td>
+                    <td class="des">@item.descripcion</td>
+                    <td class="unidadMedida">@item.unidadMedida</td>
+                    <td class="almacenId" style="display:none">@item.almacenId</td>
+                    <td class="almacenNombre">@item.almacenNombre</td>
+                    <td class="proyectoId" style="display:none">@item.proyectoId</td>
+                    <td class="proyectoNombre">@item.proyectoNombre</td>
+                    <td class="sedeId" style="display:none">@item.sedeId</td>
+                    <td class="sedeNombre">@item.sedeNombre</td>
+                    <td class="centroCostoId" style="display:none">@item.centroCostoId</td>
+                    <td class="centroCostoNombre">@item.centroCostoNombre</td>
+                    <td class="dimensionCostoId" style="display:none">@item.dimensionCostoId</td>
+                    <td class="dimensionCostoNombre">@item.dimensionCostoNombre</td>
+                    <td class="fec texto-centrado">@(string.Format("{0:yyyy-MM-dd}", item.fechaNecesaria))</td>
+                    <td class="cant texto-centrado">@item.cantidad</td>
+                    <td class="comm">@item.comentario</td>
+                    <td class="texto-centrado">
+                        <a class="editbutton" title="Editar" href="javascript:void(0);" data-url="centrocosto/DataNiveles" data-id="@item.temporal_id" data-callback="deleteNivelCC" style="margin-right:8px;">
+                            <span class='fa fa-pencil'></span>
+                        </a>
+                        <a class="removebutton" title="Eliminar" href="javascript:void(0);" data-url="solicitud/DataDetalle" data-id="@item.temporal_id" data-callback="deleteRequestItem">
+                            <span class='fa fa-trash-o'></span>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>

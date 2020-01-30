@@ -1,0 +1,117 @@
+﻿@model Model.Usuario
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Usuario");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = Model.nombre;
+    ViewBag.SubTitle = "Detalles de Usuario " + Model.id.ToString("D9");
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.IndexUrl = Url.Action("Index", "Usuario");
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {ViewBag.IndexUrl, @ViewBag.Title},
+        new string[] {"", @ViewBag.SubTitle}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "return";
+
+    List<Model.Empresa> allEmpresas = ViewBag.Empresas;
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-8 form-group form-margin-center">
+                <h5>Información Personal</h5>
+                <table class="table-view table-view-bordered">
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Nombre</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.nombre</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Rol</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.Rol.descripcion</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Usuario Web</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.cuentaWeb</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Correo</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.correo</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Estado</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@(Model.estado.Equals("A") ? "Activo" : "Inactivo")</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Fecha de registro</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.fechaRegistro</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Código SAP</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.codigo_sap</dd></dl></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 form-group form-margin-center">
+                <h5>Empresas asignadas</h5>
+                <table class="table-view-bordered">
+                    @foreach (var e in Model.Empresas)
+                    {
+                        <tr><td><dl class="dl-horizontal"><dd>@e.descripcion</dd></dl></td></tr>
+                    }
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 form-group form-margin-center">
+                <h5>Centros de costo asignados</h5>
+                <table class="table-view-bordered">
+                    @foreach (var e in allEmpresas)
+                    {
+                        var print = false;
+                        foreach (var item in Model.CentrosCosto)
+                        {
+                            if (item.Empresa_id == e.id)
+                            {
+                                print = true;
+                            }
+                        }
+
+                        if (print)
+                        {
+                            <tr>
+                                <td><dl class="dl-horizontal"><dt>@e.descripcion</dt></dl></td>
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dd>
+                                            @foreach (var c in Model.CentrosCosto)
+                                            {
+                                                if (c.Empresa_id == e.id)
+                                                {
+                                                    <span>@c.descripcion</span>
+                                                }
+                                            }
+                                        </dd>
+                                    </dl>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

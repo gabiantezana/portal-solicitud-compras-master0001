@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Model.Menu>
+
+@{
+    List<Model.MenuRol> permisos = (List<Model.MenuRol>)Session[Casuarinas.Helpers.Constantes.ACCESOS];
+    Model.Usuario usuario = (Model.Usuario)Session[Casuarinas.Helpers.Constantes.SESSION_USUARIO];
+    Model.Configuracion config = (Model.Configuracion)Session[Casuarinas.Helpers.Constantes.CONFIGURACION];
+}
+<!-- aside -->
+<div id="aside" class="app-aside modal fade md nav-expand folded">
+    <div class="left navside indigo-900 dk" layout="column">
+        <div class="navbar navbar-md no-radius">
+            <!-- brand -->
+            <a class="navbar-brand" href="/">
+                <div ui-include="'/Assets/images/logo.svg'"></div>
+                <img src="~/Assets/images/logo.png" alt="." class="hide">
+                <span class="hidden-folded inline">@config.nombre_empresa</span>
+            </a>
+            <!-- / brand -->
+        </div>
+        <div flex class="hide-scroll">
+            <nav class="scroll nav-active-primary">
+                <ul class="nav" ui-nav>
+                    <li class="nav-header hidden-folded">
+                        <small class="text-muted">Principal</small>
+                    </li>
+                    @foreach (var m in Model)
+                    {
+                        foreach (var a in permisos)
+                        {
+                            if (m.id == a.Menu_id && a.accesa)
+                            {
+                                <li class="menu_id @(TempData["clicked"] != null ? (TempData["clicked"].ToString().Equals(m.id.ToString())? "active": "") : "")" id="@m.id">
+                                    <a href="@Url.Action(m.actionName, m.controllerName)" data-form-method="post">
+                                        <span class="nav-icon">
+                                            <i class="material-icons">@m.iconName</i>
+                                        </span>
+                                        <span class="nav-text">@m.descripcion</span>
+                                    </a>
+                                </li>
+                                break;
+                            }
+                        }
+                    }
+                    <li class="nav-header hidden-folded">
+                        <small class="text-muted">Ayuda</small>
+                    </li>
+                    <li class="hidden-folded">
+                        <a href="javascript:void(0);">
+                            <span class="nav-icon">
+                                <i class="material-icons">storage</i>
+                            </span>
+                            <span class="nav-text">Documentación</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- / aside -->

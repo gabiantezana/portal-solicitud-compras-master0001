@@ -1,0 +1,128 @@
+﻿<script type="text/javascript">
+    function navbarSwitch() {
+        var aside = document.getElementById("aside");
+        var swtel = document.querySelector(".button-navbar-switch a");
+        if (aside.className.indexOf("folded") != -1) {
+            aside.classList.remove("folded");
+            swtel.classList.remove("color-indigo");
+        } else {
+            aside.classList.add("folded");
+            swtel.classList.add("color-indigo");
+        }
+    }
+    function htmlEncode(value) {
+        var encodedValue = $('<div />').text(value).html();
+        return encodedValue;
+    }
+    function getDate(element) {
+        var date;
+        try {
+            date = $.datepicker.parseDate("yy-mm-dd", element.value);
+        } catch (error) {
+            date = null;
+        }
+        return date;
+    }
+    function base_url(url) {
+        return '@(Url.Content("~/"))' + url;
+    }
+    function redirect(href) {
+        window.location.href = '@(Url.Content("~/"))' + href;
+    }
+    function notificacion(tipo, texto) {
+        if (texto) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "3000",
+                "timeOut": "5000",
+                "extendedTimeOut": "3000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            tipo == 0 ? toastr.info(texto) : toastr.error(texto);
+        }
+    }
+    function fnAprobarSolicitudes(ids, result = "") {
+        var data = { ids: ids };
+        if (result !== "") data.comentario = result;
+        $.ajax({
+            type: 'POST',
+            traditional: true,
+            url: base_url('pendientes/AprobarSolicitud'),
+            data: data,
+            success: function (r) {
+                if (r.respuesta) {
+                    redirect(r.redirect);
+                    //Signal R notification
+                    // Referenciar la instancia del "hub"  
+                    var chat = $.connection.messageHub;
+                    chat.server.updateAll();
+
+                } else {
+                    notificacion(1, r.error);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                notificacion(1, errorThrown);
+            }
+        });
+    }
+    function fnRechazarSolicitudes(ids, result = "") {
+        var data = { ids: ids };
+        if (result !== "") data.comentario = result;
+        $.ajax({
+            type: 'POST',
+            traditional: true,
+            url: base_url('pendientes/RechazarSolicitud'),
+            data: data,
+            success: function (r) {
+                if (r.respuesta) {
+                    redirect(r.redirect);
+                } else {
+                    notificacion(1, r.error);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                notificacion(1, errorThrown);
+            }
+        });
+    }
+</script>
+
+@if (TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE] != null)
+{
+    <script>notificacion(0, "@TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE]");</script>
+}
+@if (TempData[Casuarinas.Helpers.Constantes.SUCCESS_MESSAGE] != null)
+{
+    <script>notificacion(0, "@TempData[Casuarinas.Helpers.Constantes.SUCCESS_MESSAGE]");</script>
+}
+@if (TempData[Casuarinas.Helpers.Constantes.ALERT_MESSAGE] != null)
+{
+    <script>notificacion(1, "@TempData[Casuarinas.Helpers.Constantes.ALERT_MESSAGE]");</script>
+}
+@if (TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE_APPROVE] != null)
+{
+    <script>notificacion(0, "@TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE_APPROVE]");</script>
+}
+@if (TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE_DENIED] != null)
+{
+    <script>notificacion(1, "@TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE_DENIED]");</script>
+}
+@if (TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE_EMAIL] != null)
+{
+    <script>notificacion(0, "Se envi&oacute; con &eacute;xito un email de notificaci&oacute;n al usuario aprobador");</script>
+}
+@if (TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE_EMAIL_ERROR] != null)
+{
+    <script>notificacion(1, "@TempData[Casuarinas.Helpers.Constantes.TEMPDATA_MESSAGE_EMAIL_ERROR]");</script>
+}

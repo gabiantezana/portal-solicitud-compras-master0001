@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Recuperar contraseña";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+<div class="center-block w-xxl w-auto-xs p-y-md">
+    <div class="navbar"></div>
+    <div class="p-a-md box-color r box-shadow-z1 text-color m-a">
+        <div class="m-b">
+            Olvidaste tu contraseña?
+            <p class="text-xs m-t forgot-info">Ingresa tu dirección de correo electrónico y te enviaremos instrucciones sobre como cambiar tu contraseña.</p>
+        </div>
+        @using (Html.BeginForm("forgotPassword", "Autentificacion", FormMethod.Post, new { id = "frmRecupera", ui_jp = "parsley" }))
+        {
+            <div class="md-form-group float-label">
+                <input type="text" class="md-input" name="user" id="user" autofocus required>
+                <label>Ingrese su usuario...</label>
+            </div>
+            <div class="md-form-group float-label">
+                <input type="email" class="md-input" name="correo" id="correo" required>
+                <label>Ingrese su correo...</label>
+            </div>
+            <div class="m-b-md"></div>
+            <button type="submit" class="btn primary btn-block p-x-md" style="cursor:pointer;" id="btnSubmitForgot">Enviar</button>
+        }
+    </div>
+    <p id="alerts-container"></p>
+    <div class="p-v-lg text-center">Regresar a <a ui-sref="access.signin" href="@Url.Action("Index", "Autentificacion")" class="text-primary _600">Iniciar sesión</a></div>
+</div>

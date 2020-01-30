@@ -1,0 +1,30 @@
+﻿@*
+    string[] props = {
+        0: controllerName,
+        1: itemIdString,
+        2: viewLink,
+        3: formLink,
+        4: deleteLink
+    };
+*@
+@{
+    var props = Model;
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol(props[0]);
+}
+
+@if (props[2] != "" && permisos != null && permisos.consulta == true)
+{
+    <div ui-include="'/Includes/action/action.view.html'" ui-href="'@Url.Action(props[2], props[0], new { id = props[1] })'"></div>
+}
+@if (props[3] != "" && permisos != null && permisos.modifica == true)
+{
+    <div ui-include="'/Includes/action/action.edit.html'" ui-href="'@Url.Action(props[3], props[0], new { id = props[1] })'"></div>
+}
+@if (props[4] != "" && permisos != null && permisos.elimina == true)
+{
+    <div ui-include="'/Includes/action/action.delete.html'" 
+         ui-href="'@Url.Action(props[4], props[0], new { id = props[1] })'" 
+         ui-mtd="@props[5]" 
+         ui-ttl="@props[6]" 
+         ui-msg="@props[7]"></div>
+}

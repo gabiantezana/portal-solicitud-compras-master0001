@@ -1,0 +1,178 @@
+﻿@model Model.Usuario
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Perfil");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Mi Perfil";
+    ViewBag.SubTitle = "Usuario " + Model.id.ToString("D9");
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.FormId = "frmPerfil";
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {"", @ViewBag.Title}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        @using (Html.BeginForm("Actualizar", "Perfil", FormMethod.Post, new { id = ViewBag.FormId, @class = "form-horizontal", ui_jp = "parsley" }))
+        {
+            @Html.HiddenFor(u => u.id)
+            @Html.HiddenFor(u => u.Rol_id)
+            @Html.HiddenFor(u => u.estado)
+            @Html.HiddenFor(u => u.passWeb)
+            <div class="row">
+                <div class="col-md-12"><h5 class="title-form">Información Personal</h5></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label for="">Rol</label>
+                    @Html.DropDownList("Rol_id", null, null, new { @id = "Rol", @class = "form-control", @disabled = "disabled" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="">Nombre completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre completo" value="@Model.nombre" maxlength="300" disabled>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo electrónico" value="@Model.correo" maxlength="100" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label for="cuentaWeb">Usuario web</label>
+                    <input type="text" class="form-control" id="cuentaWeb" name="cuentaWeb" placeholder="Cuenta web" value="@Model.cuentaWeb" maxlength="100" disabled>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="">Contraseña</label>
+                    <div class="input-group m-b-10">
+                        <input type="password" class="form-control" placeholder="Contraseña" value="***************" maxlength="100" disabled>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary tooltips" data-title="Cambiar" type="button" data-toggle="modal" data-target="#changePassword" ui-toggle-class="zoom">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="fechaRegistro">Fecha de registro</label>
+                    <input type="text" class="form-control" id="fechaRegistro" name="fechaRegistro" value="@Model.fechaRegistro" disabled>
+                </div>
+            </div>
+            <div class="row"><br /></div>
+            <div class="row">
+                <div class="col-md-12"><h5 class="title-form">Empresas</h5></div>
+            </div>
+            <div class="row">
+                @foreach (var item in Model.Empresas)
+                {
+                    <div class="col-xs-6 col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <input type="checkbox" disabled="disabled" checked="checked" name="empresas_seleccionadas" value="@item.id" />
+                            </span>
+                            <input type="text" class="form-control" value="@item.descripcion" disabled="disabled">
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row"><br /></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="title-form">Centros de costo</h5>
+                </div>
+            </div>
+            <div class="row" id="centros-costo">
+                @{
+                    var empty = true;
+                    foreach (var e in Model.Empresas)
+                    {
+                        var print = false;
+                        foreach (var item in Model.CentrosCosto)
+                        {
+                            if (item.Empresa_id == e.id)
+                            {
+                                print = true;
+                                empty = false;
+                            }
+                        }
+                        if (print)
+                        {
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">@e.descripcion</div>
+                                    <select name="centroscosto_seleccionados" multiple class="list-group" id="@e.id" style="width:100%" disabled>
+                                        @foreach (var c in Model.CentrosCosto)
+                                        {
+                                            if (c.Empresa_id == e.id)
+                                            {
+                                                <option value="@c.id" class="list-group-item" selected>@c.descripcion</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                    }
+                    if (empty)
+                    {
+                        <div class="col-md-6">
+                            <label>No se han asignado centros de costo.</label>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+<div id="changePassword" class="modal black-overlay fade animate" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cambiar contraseña</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center p-lg">
+                <form action="#" role="form">
+                    <input type="hidden" id="ItemTid" />
+                    <div class="form-group row">
+                        <label class="col-sm-5 form-control-label text-left" for="Pass">Contraseña actual</label>
+                        <div class="col-sm-7">
+                            <input id="Pass" name="Pass" class="form-control" type="password" placeholder="Ingrese la contraseña actual" maxlength="100" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-5 form-control-label text-left" for="NewPass1">Nueva contraseña:</label>
+                        <div class="col-sm-7">
+                            <input id="NewPass1" name="NewPass1" class="form-control" type="password" placeholder="Ingrese la nueva contraseña" maxlength="100" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-5 form-control-label text-left" for="NewPass2">Repita la nueva contraseña:</label>
+                        <div class="col-sm-7">
+                            <input id="NewPass2" name="NewPass2" class="form-control" type="password" placeholder="Repita la nueva contraseña" maxlength="100" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success p-x-md btn-md" id="btnChangePassword">
+                    <i class="fa fa-check"></i> Guardar
+                </button>
+                <button type="button" class="btn btn-warning p-x-md btn-md" data-dismiss="modal">
+                    <i class="fa fa-remove"></i> Cerrar
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>

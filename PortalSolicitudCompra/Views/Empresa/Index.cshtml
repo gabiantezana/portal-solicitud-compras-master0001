@@ -1,0 +1,73 @@
+﻿@model List<Model.Empresa>
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Empresa");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Empresas";
+    ViewBag.SubTitle = "Lista de registros";
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.FormUrl = Url.Action("Form", "Empresa");
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {"", @ViewBag.Title}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "new";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table ui-jp="dataTable" ui-options="" class="table table-striped table-bordered table-hover table-condensed b-t b-b">
+                <thead>
+                    <tr>
+                        <th style="width:10%">Código</th>
+                        <th style="width:15%">Descripción</th>
+                        <th style="width:10%">Nombre BD</th>
+                        <th style="width:10%">Usuario BD</th>
+                        <th style="width:15%">Password BD</th>
+                        <th style="width:10%">Estado</th>
+                        <th style="width:15%">Validación SL</th>
+                        <th style="width:15%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td class="texto-centrado">@item.id</td>
+                        <td>@item.descripcion</td>
+                        <td class="texto-centrado">@item.db_name</td>
+                        <td class="texto-centrado">@item.usuario</td>
+                        <td class="texto-centrado">@item.password</td>
+                        <td class="texto-centrado"><span class="label @(item.estado.Equals("I") ? "danger" : "primary")">@(item.estado.Equals("I") ? "Inactivo" : "Activo")</span></td>
+                        <td class="texto-centrado">@item.validacion_sl</td>
+                        <td class="texto-centrado column-actions">
+                            @{
+                                string[] props = {
+                                    "Empresa",
+                                    item.id.ToString(),
+                                    "",
+                                    "Form",
+                                    "Eliminar", 
+                                    "POST",
+                                    "Deshabilitar empresa", 
+                                    "Esta acción no eliminará los datos de la empresa, pero sí quedará desactivada para cualquier operación. ¿Desea continuar?"
+                                };
+                                Html.RenderPartial("_PartButtonsTable", props);
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

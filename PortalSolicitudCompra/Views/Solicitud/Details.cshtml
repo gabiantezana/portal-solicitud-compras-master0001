@@ -1,0 +1,227 @@
+﻿@model Model.Solicitud
+@{
+    var sessFrmPend = Session[Casuarinas.Helpers.Constantes.SESSION_FROM_PENDENTS];
+    var controlador = sessFrmPend != null ? "Pendientes" : "Solicitud";
+    var titulo = sessFrmPend != null ? "Solicitudes pendientes" : "Mis solicitudes";
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol(controlador);
+    var estado = "";
+    var icono = "";
+    var color = "#FFF";
+    var buttonActions = Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.INICIAL_REGISTRADA)?"edit,return":"return";
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = titulo;
+    ViewBag.SubTitle = "Solicitud MS" + Model.id.ToString("D9");
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.IndexUrl = Url.Action("Index", controlador);
+    ViewBag.FormUrl = Url.Action("Form", "Solicitud", new { id = Model.id });
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {ViewBag.IndexUrl, @ViewBag.Title},
+        new string[] {"", @ViewBag.SubTitle}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = (sessFrmPend != null && Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.PROCESANDO)) ? "edit,return" : buttonActions;
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12"><h5 style="margin-bottom: 0;">Solicitud de requerimiento</h5></div>
+        </div>
+        @if (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.INICIAL_REGISTRADA))
+        {
+            estado = "Pendiente";
+            icono = "refresh fa-spin";
+            color = "#F42A04";
+        }
+        else if (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.PROCESANDO))
+        {
+            estado = "Procesando";
+        }
+        else if (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.APROBADA))
+        {
+            estado = "Aprobada";
+            icono = "check-square-o";
+            color = "#5cb85c";
+        }
+        else if (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.RECHAZADA))
+        {
+            estado = "Rechazada";
+            icono = "thumbs-down";
+            color = "#F42A04";
+        }
+        else if (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.RegistradaEnSAP))
+        {
+            estado = "En SAP (Solicitud)";
+            icono = "download";
+            color = "#5bc0de";
+        }
+        else if (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.OrdenDeCompra))
+        {
+            estado = "En SAP (Orden Compra)";
+            icono = "shopping-cart";
+            color = "#428bca";
+        }
+        else if (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.IngresoAlmacen))
+        {
+            estado = "En SAP (Almacén)";
+            icono = "thumbs-up";
+            color = "#5cb85c";
+        }
+        <div class="row">
+            <div class="col-md-6 form-group form-margin-center">
+                <table class="table-view table-view-bordered">
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Identificador</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.id</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Código solicitante</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.Usuario_id</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Fecha de registro</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@(string.Format("{0:yyyy-MM-dd}", Model.fechaRegistro))</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Fecha necesaria</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@(string.Format("{0:yyyy-MM-dd}", Model.fechaNecesaria))</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Válido hasta</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@(string.Format("{0:yyyy-MM-dd}", Model.fechaVencimiento))</dd></dl></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6 form-group form-margin-center">
+                <table class="table-view table-view-bordered">
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Estado</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@estado <i class="fa fa-@icono fa-1x fa-elem" style="margin-left:5px;color:@color"></i></dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Nombre solicitante</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.Usuario_nombre</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Correo</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.Usuario.correo</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Empresa</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.Empresa_descripcion</dd></dl></td>
+                    </tr>
+                    <tr>
+                        <td><dl class="dl-horizontal"><dt>Centro de costo</dt></dl></td>
+                        <td><dl class="dl-horizontal"><dd>@Model.CentroCosto_descripcion</dd></dl></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><h5 style="margin-bottom: 0;">Contenido</h5></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 form-group form-margin-center">
+                <table class="table-view-bordered">
+                    <thead>
+                        <tr>
+                            <th class="texto-centrado" style="width:10%">Código SAP</th>
+                            <th style="width:30%">Artículo/Servicio</th>
+                            <th class="texto-centrado" style="width:15%">Fecha necesaria</th>
+                            <th style="width:5%">Cantidad</th>
+                            <th style="width:40%">Comentario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SolicitudDetalle)
+                        {
+                            <tr>
+                                <td class="texto-centrado">@item.Articulo_codigosap</td>
+                                <td>@item.descripcion</td>
+                                <td class="texto-centrado">@(string.Format("{0:yyyy-MM-dd}", item.fechaNecesaria))</td>
+                                <td class="texto-centrado">@item.cantidad</td>
+                                <td>@item.comentario</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><h5 style="margin-bottom: 0;">Historial de aprobación</h5></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 form-group form-margin-center">
+                <table class="table-view-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:25%">Usuario</th>
+                            <th style="width:5%">Prioridad</th>
+                            <th class="texto-centrado" style="width:15%">Fecha</th>
+                            <th class="texto-centrado" style="width:10%">Estado</th>
+                            <th style="width:45%">Observación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SolicitudEstado)
+                        {
+                            <tr>
+                                <td>@item.Usuario_nombre</td>
+                                <td class="texto-centrado"><span class="badge primary">@item.prioridad</span></td>
+                                <td class="texto-centrado">@item.fechaActualizacion</td>
+                                <td class="texto-centrado">
+                                    <span class="label @(item.accion.Equals(Casuarinas.Helpers.EstadoSolicitud.INICIAL_REGISTRADA)? "success" :
+                                                              (item.accion.Equals(Casuarinas.Helpers.EstadoSolicitud.APROBADA) ? "primary" : "danger"))">
+                                        <label style="font-size:small;margin-bottom:0;">
+                                            @(item.accion.Equals(Casuarinas.Helpers.EstadoSolicitud.INICIAL_REGISTRADA) ? "Pendiente" :
+                     (item.accion.Equals(Casuarinas.Helpers.EstadoSolicitud.APROBADA) ? "Aprobada" : "Rechazada"))
+                                        </label>
+                                    </span>
+                                </td>
+                                <td>@item.observacion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @if (Session[Casuarinas.Helpers.Constantes.SESSION_FROM_PENDENTS] != null && (Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.INICIAL_REGISTRADA) || Model.estado.Equals(Casuarinas.Helpers.EstadoSolicitud.PROCESANDO)))
+        {
+            <div class="row">
+                <div class="col-md-6 form-group form-margin-center text-center buttons-action-custom">
+                    <form action="#" method="post" ui-jp="parsley">
+                        <button id="btnSolAprobar" type="button" class="btn btn-primary btn-lg" title="Aprobar Solicitud" style="width:40%" data-id="@Model.id">
+                            <i class="fa fa-check ibread"></i>Aprobar
+                        </button>
+                        <button id="btnSolRechazar" type="button" class="btn btn-danger btn-lg" title="Rechazar Solicitud" style="width:40%" data-id="@Model.id">
+                            <i class="fa fa-times ibread"></i>Rechazar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            if (Model.CreadoPor != Model.ActualizadoPor)
+            {
+                <div class="row">
+                    <div class="col-md-4 form-group form-margin-center text-center buttons-action-custom">
+                        <button id="btnVerOrg" type="button" class="btn btn-primary btn-lg" style="width:300px">
+                            <i class="fa fa-map-o ibread"></i>Ver Original
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

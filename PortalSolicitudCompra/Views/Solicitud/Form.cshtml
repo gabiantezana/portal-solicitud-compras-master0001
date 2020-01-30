@@ -1,0 +1,290 @@
+﻿@model Model.Solicitud
+@{
+    var sessFrmPend = Session[Casuarinas.Helpers.Constantes.SESSION_FROM_PENDENTS];
+    var controlador = sessFrmPend != null ? "Pendientes" : "Solicitud";
+    var titulo = sessFrmPend != null ? "Solicitudes pendientes" : "Mis solicitudes";
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol(controlador);
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = titulo;
+    ViewBag.SubTitle = (Model.id > 0 ? "Editar Solicitud S" + Model.id.ToString("D9") : "Nuevo registro");
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.IndexUrl = Url.Action("Index", controlador);
+    ViewBag.FormId = "frmSolicitud";
+
+    string[][] breadcrumb = {
+new string[] {"/", "Inicio"},
+new string[] {ViewBag.IndexUrl, @ViewBag.Title},
+new string[] {"", @ViewBag.SubTitle}
+};
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "save,cancel";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        @using (Html.BeginForm("Guardar", "Solicitud", FormMethod.Post, new { id = ViewBag.FormId, @class = "form-horizontal", ui_jp = "parsley" }))
+        {
+            @Html.HiddenFor(u => u.id)
+            @Html.HiddenFor(u => u.Usuario_id)
+            @Html.HiddenFor(u => u.Usuario_nombre)
+            @Html.HiddenFor(u => u.Usuario_correo)
+            @Html.HiddenFor(u => u.fechaRegistro)
+            <div class="row">
+                <div class="col-md-12"><h5>Información general</h5></div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    <label for="">Identificador</label>
+                    <input type="text" class="form-control" value="@Model.id" disabled />
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="">Nombre usuario</label>
+                    <input type="text" class="form-control" value="@Model.Usuario_nombre" disabled />
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="">Correo electrónico</label>
+                    <input type="text" class="form-control" value="@Model.Usuario_correo" disabled />
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="fechaRegistroDis">Fecha registro</label>
+                    @if (Model.id > 0)
+                    {
+                        <div class="input-group date" ui-jp="datetimepicker" ui-options="{format:'YYYY-MM-DD HH:mm'}">
+                            <input type="text" id="fechaRegistroDis" name="fechaRegistroDis" class="form-control" value="@(string.Format("{0:yyyy-MM-dd HH:mm}",Model.fechaRegistro))" />                        
+                            <span class="input-group-addon">  <span class="fa fa-calendar"></span></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="input-group date" ui-jp="datetimepicker" ui-options="{format:'YYYY-MM-DD'}">
+                            <input type="text" id="fechaRegistroDis" name="fechaRegistroDis" class="form-control" value="@(string.Format("{0:yyyy-MM-dd}",Model.fechaRegistro))" />                      
+                            <span class="input-group-addon">  <span class="fa fa-calendar"></span></span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    <label for="fechaNecesaria">Fecha necesaria</label>
+                    <div class="input-group date" ui-jp="datetimepicker" ui-options="{
+                         format:'YYYY-MM-DD'                     }">
+                        <input type="text" id="fechaNecesaria" name="fechaNecesaria" class="form-control" value="@(string.Format("{0:yyyy-MM-dd}",Model.fechaNecesaria))">
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+
+                @*<div class="col-md-3 form-group">
+              <label for="fechaNecesaria">Fecha necesaria 2</label>
+              <div class="input-group date" ui-jp="datetimepicker" ui-options="{
+                  format:'YYYY-MM-DD HH:mm',
+          icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove'
+          }
+        }">
+                  <input type='text' class="form-control">
+                  <span class="input-group-addon">
+                      <span class="fa fa-calendar" />
+                  </span>
+              </div>
+          </div>*@
+
+                <div class="col-md-3 form-group">
+                    <label for="fechaVencimiento">Válido hasta</label>
+                    <div class="input-group date" ui-jp="datetimepicker" ui-options="{format:'YYYY-MM-DD'}">
+                        <input type="text" id="fechaVencimiento" name="fechaVencimiento" class="form-control" value="@(string.Format("{0:yyyy-MM-dd}",Model.fechaVencimiento))">
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="empresa">Empresa</label>
+                    @Html.DropDownList("empresa", null, null, new { @class = "form-control", @title = "Seleccione..." })
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="centroCosto">Centro de costo</label>
+                    @Html.DropDownList("centroCosto", ViewBag.centroCosto == null ? new SelectList(string.Empty, "Value", "Text") : null, null, new { @class = "form-control", @title = "Seleccione..." })
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="sedeId">Sede</label>
+                    @Html.DropDownList("sedeId", ViewBag.sedeId == null ? new SelectList(string.Empty, "Value", "Text") : null, null, new { @class = "form-control", @title = "Seleccione..." })
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="areaId">Área</label>
+                    @Html.DropDownList("areaId", ViewBag.areaId == null ? new SelectList(string.Empty, "Value", "Text") : null, null, new { @class = "form-control", @title = "Seleccione..." })
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="centroCosto">Tipo de autorización</label>
+                    @Html.DropDownList("tipoAutorizacion", ViewBag.tipoAutorizacion == null ? new SelectList(string.Empty, "Value", "Text") : null, null, new { @class = "form-control", @title = "Seleccione..." })
+                </div>
+            </div>
+            <div class="row"><br /></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="title-form">Contenido</h5>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:12px">
+                <div class="col-md-6 col-xs-18">
+                    <button type="button" class="btn primary" title="Agregar item" id="openModalReqAddItem">
+                        <span class="fa fa-plus-circle"></span> Agregar item
+                    </button>
+                </div>
+                <div class="col-md-3 col-xs-18">
+                    <label class="control-label" style="margin-top:5px; float:right" for="tipoSolicitud">Clase de artículo/servicio:</label>
+                </div>
+                <div class="col-md-3">
+                    @Html.DropDownList("tipoSolicitud", null, null, new { @class = "form-control", @placeholder = "Seleccione...", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="cc-niveles">
+                        @Html.Partial("DataDetalle", Model.SolicitudDetalle)
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<input type="hidden" id="insertUpd" name="insertUpd" value="@(Model.id > 0?'2':'1')" />
+
+<div id="requestAddItem" class="modal black-overlay fade animate" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Item</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center p-lg">
+                <form action="#" role="form">
+                    <input type="hidden" id="ItemTid" name="ItemTid" />
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="ItemTip">Tipo Item</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="ItemTip" name="ItemTip" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="ItemCod">Código Artículo</label>
+                        <div class="col-md-8">
+                            <select id="ItemCod" name="ItemCod" class="form-control" title="Seleccione...">
+                                <option disabled selected value="-1"> Seleccione... </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="ItemDes">Descripción</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="ItemDes" name="ItemDes" class="form-control" placeholder="Ingrese la descripción del artículo" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="unidadMedida">Unidad de medida</label>
+                        <div class="col-md-8">
+                            <select id="unidadMedida" name="unidadMedida" class="form-control" title="Seleccione...">
+                                <option disabled selected value="-1"> Seleccione... </option>
+                                <option value="UND"> UND </option>
+                                <option value="PQT"> PQT </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="almacenId">Almacén</label>
+                        <div class="col-md-8">
+                            <select id="almacenId" name="almacenId" class="form-control" title="Seleccione...">
+                                <option disabled selected value="-1"> Seleccione... </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="proyectoId">Proyecto</label>
+                        <div class="col-md-8">
+                            <select id="proyectoId" name="proyectoId" class="form-control" title="Seleccione...">
+                                <option disabled selected value="-1"> Seleccione... </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="proyectoId">Sede</label>
+                        <div class="col-md-8">
+                            <select id="sedeId" name="sedeId" class="form-control" title="Seleccione...">
+                                <option disabled selected value="-1"> Seleccione... </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="proyectoId">Centro de costo</label>
+                        <div class="col-md-8">
+                            <select id="centroCostoId" name="centroCostoId" class="form-control" title="Seleccione...">
+                                <option disabled selected value="-1"> Seleccione... </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="proyectoId">Dimensión de costo</label>
+                        <div class="col-md-8">
+                            <select id="dimensionCostoId" name="dimensionCostoId" class="form-control" title="Seleccione...">
+                                <option disabled selected value="-1"> Seleccione... </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="ItemFec">Fecha necesaria</label>
+                        <div class="col-sm-8">
+                            <div class="input-group date" ui-jp="datetimepicker" ui-options="{format:'YYYY-MM-DD'}">
+
+                                <input type="text" id="ItemFec" name="ItemFec" class="form-control" placeholder="Seleccione una fecha...">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="ItemCan">Cantidad necesaria</label>
+                        <div class="col-sm-8">
+                            <input type="number" id="ItemCan" min="1" name="ItemCan" class="form-control" placeholder="Ingrese la cantidad necesitada">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label text-left" for="ItemCom">Comentarios</label>
+                        <div class="col-sm-8">
+                            <textarea id="ItemCom" name="ItemCom" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success p-x-md btn-md" id="btnAddRequestItem">
+                    <i class="fa fa-check"></i> Agregar
+                </button>
+                <button type="button" class="btn btn-warning p-x-md btn-md" data-dismiss="modal">
+                    <i class="fa fa-remove"></i> Cerrar
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>

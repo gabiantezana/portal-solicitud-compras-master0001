@@ -1,0 +1,71 @@
+﻿@model List<Model.CentroCosto>
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("CentroCosto");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Centros de costo";
+    ViewBag.SubTitle = "Lista de registros";
+    ViewBag.BaseUrl = Url.Content("~/");
+    ViewBag.FormUrl = Url.Action("Form", "CentroCosto");
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {"", @ViewBag.Title}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table ui-jp="dataTable" ui-options="" class="table table-striped table-bordered table-hover table-condensed b-t b-b">
+                <thead>
+                    <tr>
+                        <th style="width:5%">#</th>
+                        <th style="width:15%">ID</th>
+                        <th style="width:25%">Descripción</th>
+                        <th style="width:20%">Empresa</th>
+                        <th style="width:10%">Código SAP</th>
+                        <th style="width:10%">Estado</th>
+                        <th style="width:15%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="texto-centrado">@item.id</td>
+                            <td class="texto-centrado">@("CC" + item.id.ToString("D9"))</td>
+                            <td>@item.descripcion</td>
+                            <td class="texto-centrado">@item.Empresa.descripcion</td>
+                            <td class="texto-centrado">@item.codigoSap</td>
+                            <td class="texto-centrado"><span class="label @(item.estado.Equals("I") ? "danger" : "primary")">@(item.estado.Equals("I") ? "Inactivo" : "Activo")</span></td>
+                            <td class="texto-centrado column-actions">
+                                @{
+                                    string[] props = {
+                                        "CentroCosto",
+                                        item.id.ToString(),
+                                        "",
+                                        "Form",
+                                        "Eliminar",
+                                        "POST",
+                                        "Deshabilitar centro de costo",
+                                        "Esta acción no eliminará los datos del centro de costo, pero sí quedará desactivado para cualquier operación. ¿Desea continuar?"
+                                    };
+                                    Html.RenderPartial("_PartButtonsTable", props);
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

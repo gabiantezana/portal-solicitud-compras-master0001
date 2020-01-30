@@ -1,0 +1,66 @@
+﻿@model List<Model.MigracionLog>
+@{
+    var permisos = Casuarinas.Helpers.SessionHelper.ObtenerXMenuYRol("Migracion");
+    TempData["clicked"] = permisos.Menu_id;
+    ViewBag.Title = "Migración de documentos a SAP";
+    ViewBag.SubTitle = "Lista de registros";
+    ViewBag.BaseUrl = Url.Content("~/");
+
+    string[][] breadcrumb = {
+        new string[] {"/", "Inicio"},
+        new string[] {"", @ViewBag.Title}
+    };
+    ViewBag.BreadCrumb = breadcrumb;
+    ViewBag.AuthRequest = "";
+}
+
+@{ Html.RenderPartial("_PartBreadCrumb"); }
+
+<div class="box">
+    <div class="box-header">
+        <h2>@ViewBag.Title</h2>
+        <small>@ViewBag.SubTitle</small>
+        @{ Html.RenderPartial("_PartButtonsBar", permisos); }
+    </div>
+    <div class="box-divider m-0"></div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table ui-jp="dataTable" ui-options="" class="table table-striped table-bordered table-hover table-condensed b-t b-b">
+                <thead>
+                    <tr>
+                        <th style="width:10%">Código Doc.</th>
+                        <th style="width:15%">Estado Actual</th>
+                        <th style="width:30%">Mensaje error</th>
+                        <th style="width:15%">Estado Migración</th>
+                        <th style="width:15%">Fecha Registro</th>
+                        <th style="width:15%">Fecha Actualización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var estado = "Ingreso almacén (SAP)";
+                        if (item.Estado_actual.Equals(Casuarinas.Helpers.EstadoSolicitud.APROBADA))
+                        {
+                            estado = "Aprobada (Web)";
+                        }else if (item.Estado_actual.Equals(Casuarinas.Helpers.EstadoSolicitud.RegistradaEnSAP))
+                        {
+                            estado = "Registrada (SAP)";
+                        }else if (item.Estado_actual.Equals(Casuarinas.Helpers.EstadoSolicitud.OrdenDeCompra))
+                        {
+                            estado = "Orden de compra (SAP)";
+                        }
+                        <tr>
+                            <td class="texto-centrado">@item.DocumentoId</td>
+                            <td class="texto-centrado">@estado</td>
+                            <td>@item.Mensage_error</td>
+                            <td class="texto-centrado">@(item.Migracion_estado.Equals("1")? "Exitoso": "Error")</td>
+                            <td class="texto-centrado">@(string.Format("{0:yyyy-MM-dd  hh:mm tt}", item.FechaRegistro))</td>
+                            <td class="texto-centrado">@(item.FechaActualizacion != null? string.Format("{0:yyyy-MM-dd  hh:mm tt}", item.FechaActualizacion) : "")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
